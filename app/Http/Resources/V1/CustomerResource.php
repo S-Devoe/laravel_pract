@@ -26,6 +26,7 @@ class CustomerResource extends JsonResource
             'state' => $this -> state,
             'createdAt' => $this -> created_at,
             'updatedAt' => $this -> updated_at,
+            'invoices' => InvoiceResource::collection($this->whenLoaded('invoices')),
         ];
     }
 }
