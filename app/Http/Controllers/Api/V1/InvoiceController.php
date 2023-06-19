@@ -7,9 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
+use App\Http\Requests\V1\BulkStoreInvoiceRequest;
+use App\Http\Requests\V1\BulkStoreRequest;
 use App\Http\Resources\V1\InvoiceCollection;
 use App\Http\Resources\V1\InvoiceResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class InvoiceController extends Controller
 {
@@ -46,6 +49,14 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
     {
         //
+    }
+
+    public function bulkStore(BulkStoreInvoiceRequest $request){
+        $bulk = collect($request->all())->map(function($arr, $key){
+            return Arr::except($arr, [ 'billedDate', 'paidDate', 'customerId']);
+        });
+        Invoice::insert($bulk->toArray());
+
     }
 
     /**
